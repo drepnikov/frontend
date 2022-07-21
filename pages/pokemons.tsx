@@ -1,12 +1,24 @@
 import * as React from "react";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Pokemons from "data/pokemons.json";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
+import * as fs from "fs/promises";
+import path from "path";
 
-interface IPokemonsPageProps {}
+interface PokemonInterface {
+  id: number;
+  name: string;
+  typeList: string[];
+}
 
-const PokemonsPage: NextPage<IPokemonsPageProps> = () => {
-  const [pokemons, setPokemons] = useState(Pokemons);
+interface IPokemonsPageProps {
+  pokemons: PokemonInterface[];
+}
+
+const PokemonsPage: NextPage<IPokemonsPageProps> = ({ pokemons }) => {
+  const [filteredPokemons, setFilteredPokemons] =
+    useState<PokemonInterface[]>(pokemons);
+
   const [searchValue, setSearchValue] = useState("");
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -23,16 +35,16 @@ const PokemonsPage: NextPage<IPokemonsPageProps> = () => {
       clearTimeout(timerRef.current);
 
       if (!searchValue.length) {
-        setPokemons(Pokemons);
+        setFilteredPokemons(pokemons);
       } else {
-        setPokemons(
+        setFilteredPokemons(
           Pokemons.filter((p) => {
-            return p.name.toLowerCase().includes(searchValue.toLowerCase());
+            return p.name.toLowerCase().startsWith(searchValue.toLowerCase());
           })
         );
       }
     }, 300);
-  }, [searchValue]);
+  }, [searchValue, pokemons]);
 
   return (
     <>
@@ -41,12 +53,27 @@ const PokemonsPage: NextPage<IPokemonsPageProps> = () => {
         <input type={"text"} value={searchValue} onChange={onInputChange} />
       </label>
       <ul>
-        {pokemons.map((p) => {
+        {filteredPokemons.map((p) => {
           return <li key={p.id}>{p.name}</li>;
         })}
       </ul>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps<IPokemonsPageProps> = async () => {
+  const jsonContent = await fs.readFile(
+    path.resolve(process.cwd(), "data", "pokemons.json"),
+    "utf-8"
+  );
+
+  const pokemons = JSON.parse(jsonContent);
+
+  return {
+    props: {
+      pokemons: pokemons,
+    },
+  };
 };
 
 export default PokemonsPage;

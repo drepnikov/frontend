@@ -1,11 +1,11 @@
 import * as React from "react";
 import { NextPage } from "next";
-import Pokemons from "../assets/pokemons.json";
+import Pokemons from "data/pokemons.json";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
-interface IPokemonPageProps {}
+interface IPokemonsPageProps {}
 
-const PokemonPage: NextPage<IPokemonPageProps> = () => {
+const PokemonsPage: NextPage<IPokemonsPageProps> = () => {
   const [pokemons, setPokemons] = useState(Pokemons);
   const [searchValue, setSearchValue] = useState("");
 
@@ -49,4 +49,4 @@ const PokemonPage: NextPage<IPokemonPageProps> = () => {
   );
 };
 
-export default PokemonPage;
+export default PokemonsPage;

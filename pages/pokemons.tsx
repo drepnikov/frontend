@@ -44,7 +44,7 @@ const PokemonsPage: NextPage<IPokemonsPageProps> = ({ pokemons }) => {
         );
       }
     }, 300);
-  }, [searchValue, pokemons]);
+  }, [searchValue]);
 
   return (
     <>

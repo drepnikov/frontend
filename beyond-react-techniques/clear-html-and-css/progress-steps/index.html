@@ -10,15 +10,21 @@
     <title>Progress steps</title>
   </head>
   <style>
+    :root {
+      --active-color: #3498db;
+      --disabled-color: #e0e0e0;
+    }
+
     body {
       margin: 0;
       height: 100vh;
+      background-color: #f6f7fb;
+      font-size: 14px;
     }
 
     .progress-stepper {
       position: absolute;
       width: 500px;
-      border: 1px solid dimgray;
       margin: auto;
       right: 0;
       left: 0;
@@ -31,7 +37,6 @@
 
     .container {
       display: flex;
-      font-size: 19px;
       padding: 25px;
     }
 
@@ -42,24 +47,58 @@
     }
 
     .progress {
+      position: relative;
       height: 3px;
-      background-color: darkgray;
-      width: 45px;
+      background-color: var(--disabled-color);
+      width: 70px;
+      z-index: 1;
+    }
+
+    .progress:before {
+      content: "";
+      z-index: 0;
+      top: 0;
+      left: 0;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      transform: scaleX(0);
+      background-color: var(--active-color);
+      transition: transform 0.2s ease-in;
+      transform-origin: left center;
     }
 
     .value {
-      border: 3px solid darkgray;
-      padding: 5px 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 3px solid var(--disabled-color);
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      color: darkgray;
+      color: #999;
     }
 
     .point.done .value {
-      border-color: deepskyblue;
+      border-color: var(--active-color);
     }
 
-    .point.done .progress {
-      background-color: deepskyblue;
+    .point.done .progress:before {
+      transform: scaleX(1);
+    }
+
+    button {
+      border: none;
+      color: white;
+      padding: 8px 30px;
+      margin: 5px;
+      background-color: var(--active-color);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button[disabled] {
+      background-color: var(--disabled-color);
     }
   </style>
   <body>
@@ -91,7 +130,7 @@
       const prevButton = document.querySelector(".prevBtn");
       const nextButton = document.querySelector(".nextBtn");
 
-      nextButton.addEventListener("click", (e) => {
+      nextButton.addEventListener("click", () => {
         Array.from(points).some((point, i) => {
           if (!point.classList.contains("done")) {
             point.classList.add("done");
@@ -107,7 +146,7 @@
         });
       });
 
-      prevButton.addEventListener("click", (e) => {
+      prevButton.addEventListener("click", () => {
         Array.from(points)
           .reverse()
           .some((point, i) => {

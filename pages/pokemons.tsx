@@ -1,6 +1,6 @@
 import * as React from "react";
 import { GetStaticProps, NextPage } from "next";
-import Pokemons from "data/pokemons.json";
+import Pokemons from "data/pokemons/pokemons.json";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import * as fs from "fs/promises";
 import path from "path";
@@ -63,7 +63,7 @@ const PokemonsPage: NextPage<IPokemonsPageProps> = ({ pokemons }) => {
 
 export const getStaticProps: GetStaticProps<IPokemonsPageProps> = async () => {
   const jsonContent = await fs.readFile(
-    path.resolve(process.cwd(), "data", "pokemons.json"),
+    path.resolve(process.cwd(), "data", "pokemons", "pokemons.json"),
     "utf-8"
   );
 

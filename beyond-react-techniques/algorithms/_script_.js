@@ -1,5 +1,29 @@
-function Foo(nums) {
-  return Array(...new Set(nums));
-}
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+  const mapa = {
+    "[": "]",
+    "{": "}",
+    "(": ")",
+  };
 
-console.log(Foo([1, 2, 3, 4, 5, 5, 6]));
+  const needToClose = [];
+
+  for (let p of s) {
+    if (p in mapa) {
+      needToClose.push(mapa[p]);
+    } else {
+      const needed = needToClose.pop();
+
+      if (needed !== p) return false;
+    }
+  }
+
+  return needToClose.length ? false : true;
+};
+
+console.log(isValid("()"));
+console.log(isValid("()[]{}"));
+console.log(isValid("(]"));
